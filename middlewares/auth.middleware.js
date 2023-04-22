@@ -13,7 +13,6 @@ exports.Authenticate = async (req, res, next) => {
       return res.status(401).json({ message: "You are not authenticated" });
     } else {
       const decodedUserData = jwt.verify(token, config.jwt.jwtsecret);
-      console.log(decodedUserData);
       req.userId = decodedUserData?.userId;
     }
     next();
