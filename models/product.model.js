@@ -1,6 +1,52 @@
 const mongoose = require("mongoose");
 
-const ProductSchema = new mongoose.Schema({
+const ScrapyarSchema = new mongoose.Schema({
+  title: {
+    type: String,
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
+  tagline: {
+    type: String,
+  },
+  category: {
+    type: String,
+    enum: [
+      "Car",
+      "Mobile",
+      "Laptop",
+      "Electronic",
+      "Garden",
+      "Fashion",
+      "Sports",
+      "Other",
+    ],
+  },
+  usage: {
+    type: String,
+  },
+  image: {
+    type: String,
+  },
+  brand: {
+    type: String,
+  },
+  price: {
+    type: Number,
+  },
+  contact: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+const CreativeSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
@@ -17,7 +63,16 @@ const ProductSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["electronics", "home", "beauty", "clothing", "health", "other"],
+    enum: [
+      "Painting",
+      "Home Decor",
+      "Jwelleries",
+      "Arts",
+      "Accessories",
+      "LifeStyle-Men",
+      "LifeStyle-Women",
+      "Other",
+    ],
     required: true,
   },
   usage: {
@@ -47,6 +102,7 @@ const ProductSchema = new mongoose.Schema({
   },
 });
 
-const Product = mongoose.model("Product", ProductSchema);
+const Scrapyar = mongoose.model("Scrapyar", ScrapyarSchema);
+const CreativeScrapyar = mongoose.model("Creative-Scrapyar", CreativeSchema);
 
-module.exports = Product;
+module.exports = { Scrapyar, CreativeScrapyar };

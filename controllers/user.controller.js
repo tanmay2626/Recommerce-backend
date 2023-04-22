@@ -22,7 +22,7 @@ exports.getUserHandler = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const result = await userService.updateUser(req.userId, req.body);
-    res.status(200).json({ data: result });
+    res.status(result.status).json(result.data);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
