@@ -34,9 +34,13 @@ exports.getCreativeScrapyar = async () => {
 exports.scrapyarProduct = async (id) => {
   try {
     const product = await Scrapyar.findOne({ _id: id });
+    const relatedProducts = await Scrapyar.find({
+      category: { $eq: "Mobile" },
+      _id: { $nin: id },
+    });
     return {
       status: 200,
-      data: product,
+      data: { product: product, related: relatedProducts },
     };
   } catch (error) {
     return {
@@ -49,9 +53,13 @@ exports.scrapyarProduct = async (id) => {
 exports.creativeScrapyarProduct = async (id) => {
   try {
     const product = await CreativeScrapyar.findOne({ _id: id });
+    const relatedProducts = await CreativeScrapyar.find({
+      category: { $eq: "Mobile" },
+      _id: { $nin: id },
+    });
     return {
       status: 200,
-      data: product,
+      data: { product: product, related: relatedProducts },
     };
   } catch (error) {
     return {

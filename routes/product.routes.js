@@ -13,6 +13,9 @@ router.post(
 router.get("/getScrapyar", productController.GetFromScrapyar);
 router.get("/getCreativeScrapyar", productController.GetFromCreativeScrapyar);
 router.get("/getScrapyar/:id", productController.GetScrapyarProduct);
-router.get("/getCreativeScrapyar/:id", productController.GetScrapyarProduct);
+router.get(
+  "/getCreativeScrapyar/:id",
+  productController.GetCreativeScrapyarProduct
+);
 
 module.exports = router;
