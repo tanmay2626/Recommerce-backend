@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 const config = require("../config/config");
 const User = require("../models/user.model");
 
@@ -41,23 +42,39 @@ exports.getProfile = async (userId) => {
   }
 };
 
-exports.registerUser = async (email) => {
+exports.registerUser = async (email, password) => {
+  if (!email || !password) {
+    return {
+      status: 400,
+      data: { error: "Invalid email or password" },
+    };
+  }
   try {
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
-      const token = jwt.sign(
-        {
-          userId: existingUser._id,
-        },
-        config.jwt.jwtsecret
-      );
-      return {
-        status: 200,
-        data: { token: token, user: existingUser },
-      };
+      const match = await bcrypt.compare(password, existingUser.password);
+      if (match) {
+        const token = jwt.sign(
+          {
+            userId: existingUser._id,
+          },
+          config.jwt.jwtsecret
+        );
+        return {
+          status: 200,
+          data: { token: token, user: existingUser },
+        };
+      } else {
+        return {
+          status: 400,
+          data: { error: "Invalid email or password" },
+        };
+      }
     } else {
+      const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = await User.create({
-        email,
+        email: email,
+        password: hashedPassword,
       });
       const savedUser = await newUser.save();
       const token = jwt.sign(

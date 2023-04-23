@@ -10,9 +10,9 @@ exports.viewsHandler = async (req, res) => {
 };
 
 exports.registerHandler = async (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
   try {
-    const result = await userService.registerUser(email);
+    const result = await userService.registerUser(email, password);
     res.status(result.status).json(result.data);
   } catch (error) {
     res.status(500).json({ message: error });
