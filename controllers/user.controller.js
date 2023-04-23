@@ -19,6 +19,25 @@ exports.registerHandler = async (req, res) => {
   }
 };
 
+exports.signinHandler = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const result = await userService.signinUser(email, password);
+    res.status(result.status).json(result.data);
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
+exports.oAuthHandler = async (req, res) => {
+  try {
+    const result = await userService.registerOAuth(req.body.email);
+    res.status(result.status).json(result.data);
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
+
 exports.getUserHandler = async (req, res) => {
   try {
     const user = await userService.getProfile(req.userId);

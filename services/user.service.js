@@ -42,16 +42,61 @@ exports.getProfile = async (userId) => {
   }
 };
 
-exports.registerUser = async (email, password) => {
+exports.registerOAuth = async (email) => {
+  try {
+    const existingUser = await User.findOne({ email: email });
+    if (existingUser) {
+      const token = jwt.sign(
+        {
+          userId: existingUser._id,
+        },
+        config.jwt.jwtsecret
+      );
+      return {
+        status: 200,
+        data: { token: token, user: existingUser },
+      };
+    } else {
+      const newUser = await User.create({
+        email,
+      });
+      const savedUser = await newUser.save();
+      const token = jwt.sign(
+        {
+          userId: savedUser._id,
+        },
+        config.jwt.jwtsecret
+      );
+      return {
+        status: 200,
+        data: { token: token, user: savedUser },
+      };
+    }
+  } catch (error) {
+    return {
+      status: 500,
+      data: { message: error },
+    };
+  }
+};
+
+exports.signinUser = async (email, password) => {
   if (!email || !password) {
     return {
       status: 400,
       data: { error: "Invalid email or password" },
     };
   }
+
   try {
     const existingUser = await User.findOne({ email: email });
-    if (existingUser) {
+
+    if (!existingUser) {
+      return {
+        status: 400,
+        data: { error: "Email is not registered" },
+      };
+    } else {
       const match = await bcrypt.compare(password, existingUser.password);
       if (match) {
         const token = jwt.sign(
@@ -70,6 +115,29 @@ exports.registerUser = async (email, password) => {
           data: { error: "Invalid email or password" },
         };
       }
+    }
+  } catch (error) {
+    return {
+      status: 500,
+      data: { message: error },
+    };
+  }
+};
+
+exports.registerUser = async (email, password) => {
+  if (!email || !password) {
+    return {
+      status: 400,
+      data: { error: "Invalid email or password" },
+    };
+  }
+  try {
+    const existingUser = await User.findOne({ email: email });
+    if (existingUser) {
+      return {
+        status: 400,
+        data: { error: "Email already exists" },
+      };
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = await User.create({
@@ -77,15 +145,9 @@ exports.registerUser = async (email, password) => {
         password: hashedPassword,
       });
       const savedUser = await newUser.save();
-      const token = jwt.sign(
-        {
-          userId: savedUser._id,
-        },
-        config.jwt.jwtsecret
-      );
       return {
         status: 200,
-        data: { token: token, user: savedUser },
+        data: { user: savedUser },
       };
     }
   } catch (error) {
