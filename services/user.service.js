@@ -2,6 +2,45 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 const User = require("../models/user.model");
 
+exports.updateViews = async (userId, productId) => {
+  try {
+    const profile = await User.findOneAndUpdate(
+      { _id: userId },
+      {
+        $push: { views: productId },
+      },
+      {
+        new: true,
+      }
+    );
+    return {
+      status: 200,
+      data: profile,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: { message: error },
+    };
+  }
+};
+
+exports.getProfile = async (userId) => {
+  try {
+    const profile = await User.findOne({ _id: userId });
+
+    return {
+      status: 200,
+      data: profile,
+    };
+  } catch (error) {
+    return {
+      status: 500,
+      data: { message: error },
+    };
+  }
+};
+
 exports.registerUser = async (email) => {
   try {
     const existingUser = await User.findOne({ email: email });
@@ -35,7 +74,7 @@ exports.registerUser = async (email) => {
   } catch (error) {
     return {
       status: 500,
-      data: { message: error.message },
+      data: { message: error },
     };
   }
 };

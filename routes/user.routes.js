@@ -7,5 +7,6 @@ router.get("/user", Authenticate, userController.getUserHandler);
 
 router.post("/signin", userController.registerHandler);
 router.post("/updateUser", Authenticate, userController.updateUser);
+router.put("/updateViews/:id", Authenticate, userController.viewsHandler);
 
 module.exports = router;
