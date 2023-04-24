@@ -5,19 +5,27 @@ const User = require("../models/user.model");
 
 exports.updateViews = async (userId, productId) => {
   try {
-    const profile = await User.findOneAndUpdate(
-      { _id: userId },
-      {
-        $push: { views: productId },
-      },
-      {
-        new: true,
-      }
-    );
-    return {
-      status: 200,
-      data: profile,
-    };
+    const profile = await User.findOne({ _id: userId });
+    if (!profile.views.includes(productId)) {
+      const updatedProfile = await User.findOneAndUpdate(
+        { _id: userId },
+        {
+          $push: { views: productId },
+        },
+        {
+          new: true,
+        }
+      );
+      return {
+        status: 200,
+        data: profile,
+      };
+    } else {
+      return {
+        status: 200,
+        data: { message: "Already added." },
+      };
+    }
   } catch (error) {
     return {
       status: 500,

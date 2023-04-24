@@ -52,7 +52,9 @@ exports.scrapyarProduct = async (id) => {
 
 exports.creativeScrapyarProduct = async (id) => {
   try {
-    const product = await CreativeScrapyar.findOne({ _id: id });
+    const product = await CreativeScrapyar.findOne({ _id: id }).populate(
+      "contact"
+    );
     const relatedProducts = await CreativeScrapyar.find({
       category: { $eq: "Mobile" },
       _id: { $nin: id },

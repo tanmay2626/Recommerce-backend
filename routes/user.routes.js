@@ -9,6 +9,6 @@ router.post("/user/register", userController.registerHandler);
 router.post("/user/signin", userController.signinHandler);
 router.post("/user/oauth/signin", userController.oAuthHandler);
 router.put("/user/updateUser", Authenticate, userController.updateUser);
-router.put("/user/updateViews/:id", Authenticate, userController.viewsHandler);
+router.put("/user/updateViews", Authenticate, userController.viewsHandler);
 
 module.exports = router;

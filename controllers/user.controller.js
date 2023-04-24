@@ -2,7 +2,7 @@ const userService = require("../services/user.service");
 
 exports.viewsHandler = async (req, res) => {
   try {
-    const result = await userService.updateViews(req.userId, req.params.id);
+    const result = await userService.updateViews(req.userId, req.body.id);
     res.status(result.status).json(result.data);
   } catch (error) {
     res.status(500).json({ message: error });
