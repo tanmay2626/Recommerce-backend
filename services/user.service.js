@@ -84,7 +84,7 @@ exports.signinUser = async (email, password) => {
   if (!email || !password) {
     return {
       status: 400,
-      data: { error: "Invalid email or password" },
+      data: { message: "Invalid email or password" },
     };
   }
 
@@ -94,7 +94,7 @@ exports.signinUser = async (email, password) => {
     if (!existingUser) {
       return {
         status: 400,
-        data: { error: "Email is not registered" },
+        data: { message: "Email is not registered" },
       };
     } else {
       const match = await bcrypt.compare(password, existingUser.password);
@@ -112,7 +112,7 @@ exports.signinUser = async (email, password) => {
       } else {
         return {
           status: 400,
-          data: { error: "Invalid email or password" },
+          data: { message: "Invalid email or password" },
         };
       }
     }
@@ -128,7 +128,7 @@ exports.registerUser = async (email, password) => {
   if (!email || !password) {
     return {
       status: 400,
-      data: { error: "Invalid email or password" },
+      data: { message: "Invalid email or password" },
     };
   }
   try {
@@ -136,7 +136,7 @@ exports.registerUser = async (email, password) => {
     if (existingUser) {
       return {
         status: 400,
-        data: { error: "Email already exists" },
+        data: { message: "Email already exists" },
       };
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -175,7 +175,7 @@ exports.updateUser = async (userId, updates) => {
     if (existingUser) {
       return {
         status: 404,
-        message: "Username already exist",
+        data: { message: "Username already exist" },
       };
     }
   }

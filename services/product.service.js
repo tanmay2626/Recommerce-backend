@@ -35,7 +35,7 @@ exports.scrapyarProduct = async (id) => {
   try {
     const product = await Scrapyar.findOne({ _id: id });
     const relatedProducts = await Scrapyar.find({
-      category: { $eq: "Mobile" },
+      category: { $eq: product.category },
       _id: { $nin: id },
     });
     return {
@@ -64,7 +64,7 @@ exports.creativeScrapyarProduct = async (id) => {
   } catch (error) {
     return {
       status: 500,
-      error: error,
+      data: { message: error },
     };
   }
 };
@@ -87,9 +87,11 @@ exports.createScrapyar = async (userId, productDetails) => {
     usage: productDetails.usage,
     brand: productDetails.brand,
     price: productDetails.price,
-    image: productDetails.img,
-    contact: user,
+    image: productDetails.image,
+    contact: userId,
   };
+
+  console.log(addProduct);
 
   try {
     const newProduct = await Scrapyar.create(addProduct);
@@ -108,6 +110,7 @@ exports.createScrapyar = async (userId, productDetails) => {
       data: savedProduct,
     };
   } catch (error) {
+    console.log(error);
     return {
       status: 500,
       error: error,
@@ -117,6 +120,7 @@ exports.createScrapyar = async (userId, productDetails) => {
 
 exports.createCreativeScrapyar = async (userId, productDetails) => {
   const user = await User.findOne({ _id: userId });
+  console.log(productDetails);
 
   if (!user) {
     return {
@@ -133,19 +137,30 @@ exports.createCreativeScrapyar = async (userId, productDetails) => {
     usage: productDetails.usage,
     brand: productDetails.brand,
     price: productDetails.price,
-    image: productDetails.img,
+    image: productDetails.image,
     contact: userId,
   };
+
+  console.log(addProduct);
 
   try {
     const newProduct = await CreativeScrapyar.create(addProduct);
     const savedProduct = await newProduct.save();
+
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: userId },
+      { $push: { listedByMe: savedProduct } },
+      { new: true }
+    );
+
+    await updatedUser.save();
 
     return {
       status: 200,
       data: savedProduct,
     };
   } catch (error) {
+    console.log(error);
     return {
       status: 500,
       error: error,
