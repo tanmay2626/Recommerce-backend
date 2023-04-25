@@ -1,5 +1,6 @@
 const config = require("../config/config");
 const Transaction = require("../models/transactions.model");
+const User = require("../models/user.model");
 const stripe = require("stripe")(config.app.stripe);
 
 exports.generateSecret = async (amount) => {
@@ -49,6 +50,14 @@ exports.createTransaction = async (userId, transactionDetails) => {
   try {
     const newTransaction = await Transaction.create(transaction);
     const savedTransaction = await newTransaction.save();
+
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: userId },
+      { $push: { orders: savedTransaction } },
+      { new: true }
+    );
+
+    await updatedUser.save();
     return {
       status: 200,
       data: savedTransaction,
