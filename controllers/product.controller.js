@@ -28,7 +28,6 @@ exports.GetScrapyarProduct = async (req, res) => {
 };
 
 exports.GetCreativeScrapyarProduct = async (req, res) => {
-  console.log(req.params.id);
   try {
     const result = await productServices.creativeScrapyarProduct(req.params.id);
     res.status(result.status).json(result.data);

@@ -18,7 +18,7 @@ exports.updateViews = async (userId, productId) => {
       );
       return {
         status: 200,
-        data: profile,
+        data: updatedProfile,
       };
     } else {
       return {

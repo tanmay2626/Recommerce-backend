@@ -33,7 +33,7 @@ exports.getCreativeScrapyar = async () => {
 
 exports.scrapyarProduct = async (id) => {
   try {
-    const product = await Scrapyar.findOne({ _id: id });
+    const product = await Scrapyar.findOne({ _id: id }).populate("contact");
     const relatedProducts = await Scrapyar.find({
       category: { $eq: product.category },
       _id: { $nin: id },
@@ -93,8 +93,6 @@ exports.createScrapyar = async (userId, productDetails) => {
     contact: userId,
   };
 
-  console.log(addProduct);
-
   try {
     const newProduct = await Scrapyar.create(addProduct);
     const savedProduct = await newProduct.save();
@@ -122,7 +120,6 @@ exports.createScrapyar = async (userId, productDetails) => {
 
 exports.createCreativeScrapyar = async (userId, productDetails) => {
   const user = await User.findOne({ _id: userId });
-  console.log(productDetails);
 
   if (!user) {
     return {
@@ -142,8 +139,6 @@ exports.createCreativeScrapyar = async (userId, productDetails) => {
     image: productDetails.image,
     contact: userId,
   };
-
-  console.log(addProduct);
 
   try {
     const newProduct = await CreativeScrapyar.create(addProduct);

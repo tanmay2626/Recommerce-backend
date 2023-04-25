@@ -12,6 +12,7 @@ app.use(bodyparser.urlencoded({ extended: true })); // middleware to parse incom
 // routes
 app.use("/api", require("./routes/user.routes"));
 app.use("/api", require("./routes/product.routes"));
+app.use("/api", require("./routes/transaction.routes"));
 
 // initial request
 app.get("/", (req, res) => {
