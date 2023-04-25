@@ -11,14 +11,14 @@ exports.getScrapyar = async () => {
   } catch (error) {
     return {
       status: 500,
-      error: error,
+      data: { message: error },
     };
   }
 };
 
 exports.getCreativeScrapyar = async () => {
   try {
-    const products = await CreativeScrapyar.find().limit(10);
+    const products = await CreativeScrapyar.find();
     return {
       status: 200,
       data: products,
@@ -26,7 +26,7 @@ exports.getCreativeScrapyar = async () => {
   } catch (error) {
     return {
       status: 500,
-      error: error,
+      data: { message: error },
     };
   }
 };
@@ -45,7 +45,7 @@ exports.scrapyarProduct = async (id) => {
   } catch (error) {
     return {
       status: 500,
-      error: error,
+      data: { message: error },
     };
   }
 };
@@ -110,10 +110,9 @@ exports.createScrapyar = async (userId, productDetails) => {
       data: savedProduct,
     };
   } catch (error) {
-    console.log(error);
     return {
       status: 500,
-      error: error,
+      data: { message: error },
     };
   }
 };
@@ -133,8 +132,8 @@ exports.createCreativeScrapyar = async (userId, productDetails) => {
     tagline: productDetails.tagline,
     description: productDetails.description,
     category: productDetails.category,
-    usage: productDetails.usage,
-    brand: productDetails.brand,
+    age: productDetails.age,
+    artist: productDetails.artist,
     price: productDetails.price,
     image: productDetails.image,
     contact: userId,
@@ -160,7 +159,7 @@ exports.createCreativeScrapyar = async (userId, productDetails) => {
     console.log(error);
     return {
       status: 500,
-      error: error,
+      data: { message: error },
     };
   }
 };

@@ -36,7 +36,7 @@ exports.updateViews = async (userId, productId) => {
 
 exports.getProfile = async (userId) => {
   try {
-    const profile = await User.findOne({ _id: userId });
+    const profile = await User.findOne({ _id: userId }).populate("orders");
 
     return {
       status: 200,
@@ -207,7 +207,7 @@ exports.updateUser = async (userId, updates) => {
   } catch (error) {
     return {
       status: 500,
-      error: error.message,
+      data: { message: error },
     };
   }
 };

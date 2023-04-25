@@ -75,7 +75,7 @@ const CreativeSchema = new mongoose.Schema({
     ],
     required: true,
   },
-  usage: {
+  age: {
     type: String,
     required: true,
   },
@@ -83,7 +83,7 @@ const CreativeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  brand: {
+  artist: {
     type: String,
     required: true,
   },
