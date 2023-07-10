@@ -17,6 +17,7 @@ const ScrapyarSchema = new mongoose.Schema({
       "Car",
       "Mobile",
       "Laptop",
+      "Furniture",
       "Electronic",
       "Garden",
       "Fashion",
